@@ -38,6 +38,9 @@ class NodeIndexer extends ContentRepositoryAdaptor\Indexer\NodeIndexer
      */
     public function indexNode(NodeInterface $node, $targetWorkspaceName = null)
     {
+        if ($targetWorkspaceName === null) {
+            return;
+        }
         if ($this->enableLiveAsyncIndexing !== true) {
             parent::indexNode($node, $targetWorkspaceName);
             return;
