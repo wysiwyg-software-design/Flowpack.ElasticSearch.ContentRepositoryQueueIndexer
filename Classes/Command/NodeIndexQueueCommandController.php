@@ -3,6 +3,7 @@ namespace Flowpack\ElasticSearch\ContentRepositoryQueueIndexer\Command;
 
 use Flowpack\ElasticSearch\ContentRepositoryAdaptor\Indexer\NodeIndexer;
 use Flowpack\ElasticSearch\ContentRepositoryAdaptor\Mapping\NodeTypeMappingBuilder;
+use Flowpack\ElasticSearch\ContentRepositoryQueueIndexer\CheckIndexAndUpdateAliasJob;
 use Flowpack\ElasticSearch\ContentRepositoryQueueIndexer\Domain\Repository\NodeDataRepository;
 use Flowpack\ElasticSearch\ContentRepositoryQueueIndexer\IndexingJob;
 use Flowpack\ElasticSearch\ContentRepositoryQueueIndexer\LoggerTrait;
@@ -107,7 +108,7 @@ class NodeIndexQueueCommandController extends CommandController
             $this->outputLine();
             $this->indexWorkspace($workspace, $indexPostfix);
         }
-        $updateAliasJob = new UpdateAliasJob($indexPostfix);
+        $updateAliasJob = new CheckIndexAndUpdateAliasJob($indexPostfix, ($this->settings['jobs'][CheckIndexAndUpdateAliasJob::class]['validators'] ?? []));
         $this->jobManager->queue(self::BATCH_QUEUE_NAME, $updateAliasJob);
 
         $this->outputLine("Indexing jobs created for queue %s with success ...", [self::BATCH_QUEUE_NAME]);

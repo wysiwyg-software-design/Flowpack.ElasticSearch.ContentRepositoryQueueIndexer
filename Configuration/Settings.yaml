@@ -4,6 +4,11 @@ Flowpack:
       enableLiveAsyncIndexing: true
       # Change size of single batch jobs via this setting (fallback default is 500)
       # batchSize: 50
+      # Validators before switching alias
+      #jobs:
+      #  'Flowpack\ElasticSearch\ContentRepositoryQueueIndexer\CheckIndexAndUpdateAliasJob':
+      #    validators:
+      #      'classname implementing IndexValidatorInterface': true
   JobQueue:
     Common:
       queues:
