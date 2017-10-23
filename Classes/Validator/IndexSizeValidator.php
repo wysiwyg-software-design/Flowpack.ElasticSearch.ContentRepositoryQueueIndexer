@@ -5,13 +5,20 @@ use Flowpack\ElasticSearch\ContentRepositoryQueueIndexer\IndexValidatorInterface
 use Flowpack\ElasticSearch\Domain\Model\Index;
 use Neos\Error\Messages\Error;
 use Neos\Error\Messages\Result;
+use Neos\Flow\Annotations as Flow;
 
 /**
  *
  */
 class IndexSizeValidator implements IndexValidatorInterface
 {
-    const MINIMUM_DOCS_ALLOWED = 5000000;
+    const MINIMUM_DOCS_ALLOWED = 400000;
+
+    /**
+     * @Flow\InjectConfiguration()
+     * @var int
+     */
+    protected $minimumAllowedDocuments;
 
     /**
      * Check if the index contains the minimal count of docs.
