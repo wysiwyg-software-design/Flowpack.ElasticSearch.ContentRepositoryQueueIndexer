@@ -12,13 +12,14 @@ use Neos\Flow\Annotations as Flow;
  */
 class IndexSizeValidator implements IndexValidatorInterface
 {
-    const MINIMUM_DOCS_ALLOWED = 400000;
+
+    const MINIMUM_DOCS_ALLOWED = 500000;
 
     /**
      * @Flow\InjectConfiguration()
-     * @var int
+     * @var array
      */
-    protected $minimumAllowedDocuments;
+    protected $settings;
 
     /**
      * Check if the index contains the minimal count of docs.
@@ -28,6 +29,7 @@ class IndexSizeValidator implements IndexValidatorInterface
      */
     public function isValid(Index $index): Result
     {
+
         $result = new Result();
         $httpResponse = $index->request('GET', '/_stats');
         if ($httpResponse->getStatusCode() !== 200) {
@@ -41,7 +43,9 @@ class IndexSizeValidator implements IndexValidatorInterface
             return $result;
         }
 
-        if ($responseContent['_all']['primaries']['docs']['count'] < self::MINIMUM_DOCS_ALLOWED) {
+        $minimumDocsAllowed = $this->settings['minimumDocsAllowed'] ?? self::MINIMUM_DOCS_ALLOWED;
+
+        if ($responseContent['_all']['primaries']['docs']['count'] < $minimumDocsAllowed) {
             $result->addError(new Error('Index contains less than minimum docs allowed: ' . $responseContent['_all']['primaries']['docs']['count']));
             return $result;
         }
